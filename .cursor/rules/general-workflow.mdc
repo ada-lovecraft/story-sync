@@ -1,0 +1,52 @@
+---
+description: General development workflow and practices
+globs: **/*
+alwaysApply: false
+---
+# General Development Workflow
+
+
+## Project Architecture
+
+Available as a living document [chatlog-cleaner-architecture.md](mdc:docs/chatlog-cleaner-architecture.md)
+
+## Helpful Docs
+
+**User Workflow Guide:** [chatlog-cleaner-workflow-guide.md](mdc:docs/chatlog-cleaner-workflow-guide.md)
+Offers a quick reference for implementing and extending the workflow steps in the application. It includes information on the workflow architecture, key components, how to implement a new workflow step, common workflow patterns, and best practices. This document will be particularly useful when adding new features to the workflow.
+
+**Troubleshooting Guide:** [chatlog-cleaner-troubleshooting.md](mdc:docs/chatlog-cleaner-troubleshooting.md)
+Contains solutions for common issues encountered when working with the application, including database issues, React component issues, TRPC query issues, file upload issues, workflow navigation issues, and development environment issues. This document will be valuable for quickly resolving problems that may arise during development.
+
+## Code Change Process
+
+1. Write tests before implementing
+2. Focus on single responsibility
+3. Think step-by-step
+4. Be proactive about edge cases
+5. Gather information before acting
+   - Use `man` pages
+   - Use `--help` commands
+   - Read full documentation
+
+## Package Management
+- Use CLI tools to find latest package versions
+- Verify compatibility before adding dependencies
+- Document version requirements
+
+## Code Review Guidelines
+- Be concise
+- Be critical but constructive
+- Verify suggestions against documentation
+- Consider edge cases
+- Treat all stakeholders as domain experts
+
+## Testing Practices
+- Run tests after every code change
+- Run tests after writing new tests
+- Fix failing tests immediately
+- Write tests before implementing features
+- Focus on atomic, single-responsibility test cases
+
+## Substitutions
+- instead of `toast` component/hooks use [sonner.tsx](mdc:src/app/_components/ui/sonner.tsx)

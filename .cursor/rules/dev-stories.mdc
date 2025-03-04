@@ -1,0 +1,30 @@
+---
+description: when operating on a dev story
+globs: docs/dev-story-*.md
+alwaysApply: false
+---
+
+# When working on a Dev Story 
+
+## When Working on a dev story
+
+- notify the user of the sub section you are working on
+- when begging work on checklist items in a new subsection, 
+    - update the subsection's title to end with `[IN PROGRESS]`
+    - create an empty `Steps Taken` section in this subsection to be filled in as items are completed
+- upon completing all check list items in a sub section, 
+    - update the subsection's title to end with `[COMPLETE]`
+    - notify the user
+- upon completing all check list items in the dev story, notify the user
+
+## When Working on a dev story Checklist Item
+
+- Work on one check list item at a time
+- use the notify tool to notify the user that you are beginning work on a new check list item
+- when you have completed the checklist item
+    - append bullet items to the `Steps Taken` area that describe the changes you made to complete the checklist item
+    - notify the user prefixed with `[x/y]` where `x` is the item complete and `y` is the total number of checklist items in the subsection
+    - update the dev story document to mark the item as complete
+
+
+

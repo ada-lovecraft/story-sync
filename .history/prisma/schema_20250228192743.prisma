@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+// Original document uploaded by user
+model ChatLog {
+    id             String   @id // file hash as ID
+    filename       String
+    fileSize       Int
+    content        String // Original file content
+    uploadDate     DateTime @default(now())
+    lastModified   DateTime @updatedAt
+    lastStepNumber Int      @default(1) // Current workflow step (1: Upload, 2: Clean, 3: Parse, 4: Chapter)
+
+    // Relationships
+    cleanedChatLog CleanedChatLog?
+
+    @@index([filename])
+}
+
+// The cleaned version of the chat log after pattern replacements
+model CleanedChatLog {
+    id            Int      @id @default(autoincrement())
+    content       String // Cleaned content after pattern replacement
+    originalSize  Int // Size of original content in bytes
+    cleanedSize   Int // Size of cleaned content in bytes
+    originalLines Int // Number of lines in original content
+    cleanedLines  Int // Number of lines in cleaned content
+    createdAt     DateTime @default(now())
+
+    // Relationships
+    chatLogId String  @unique
+    chatLog   ChatLog @relation(fields: [chatLogId], references: [id], onDelete: Cascade)
+    rounds    Round[]
+}
+
+// Individual conversation round (user + dungeon_master pair)
+model Round {
+    id          Int      @id @default(autoincrement())
+    roundNumber Int // Sequential number of the round
+    startLine   Int // Start line number in the cleaned text
+    endLine     Int // End line number in the cleaned text
+    totalLines  Int // Total lines in this round
+    totalChars  Int // Total characters in this round
+    isOmitted   Boolean  @default(false) // Whether this round should be omitted from summarization
+    createdAt   DateTime @default(now())
+
+    // Relationships
+    cleanedChatLogId Int
+    cleanedChatLog   CleanedChatLog    @relation(fields: [cleanedChatLogId], references: [id], onDelete: Cascade)
+    chapterId        Int?
+    chapter          Chapter?          @relation(fields: [chapterId], references: [id])
+    narrativeSummary NarrativeSummary?
+
+    @@unique([cleanedChatLogId, roundNumber])
+    @@index([cleanedChatLogId])
+    @@index([chapterId])
+}
+
+// Group of rounds organized into a logical unit
+model Chapter {
+    id            Int      @id @default(autoincrement())
+    chapterNumber Int // Sequential chapter number
+    title         String? // Optional chapter title
+    targetLines   Int // Target line count for this chapter
+    actualLines   Int // Actual line count for all rounds in this chapter
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    // Relationships
+    rounds Round[]
+
+    @@index([chapterNumber])
+}
+
+// Narrative summary for a round
+model NarrativeSummary {
+    id        Int      @id @default(autoincrement())
+    summary   String // One-sentence narrative summary
+    status    String   @default("queued") // Status: queued, completed, error
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relationships
+    roundId Int   @unique
+    round   Round @relation(fields: [roundId], references: [id], onDelete: Cascade)
+}
+
+// Configuration for context carrying between chapters
+model ContextDownConfig {
+    id              Int      @id @default(autoincrement())
+    fromRoundId     Int // ID of the first round to include in context
+    toRoundId       Int // ID of the last round to include in context
+    targetChapterId Int // Chapter that receives this context
+    createdAt       DateTime @default(now())
+
+    @@unique([fromRoundId, toRoundId, targetChapterId])
+}

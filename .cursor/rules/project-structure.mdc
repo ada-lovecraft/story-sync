@@ -1,0 +1,56 @@
+---
+description: project structure
+globs: *.ts, *.tsx
+alwaysApply: false
+---
+# Project Structure
+
+This document provides an overview of the project's directory structure along with a brief description of each directory.
+
+## Directories
+
+- **src/**: Contains the application's source code, including components, utils, and feature modules.
+- **node_modules/**: Contains all npm packages and dependencies installed for the project.
+- **.history/**: Contains versioned snapshots or backups of file changes (typically used for development history).
+- **.cursor/**: Stores configuration, metadata, or other settings related to the Cursor tool.
+- **.git/**: Contains Git-related data including commits, branches, and history for version control.
+- **.next/**: Holds the build output and cache for Next.js, used during development and deployment.
+- **public/**: Contains static assets such as images, fonts, and other files served directly to the browser.
+
+## src Directory Structure
+
+Below is the directory tree for the src folder (directories only):
+
+```
+src
+├── app
+│   ├── _components
+│   │   └── ui
+│   └── api
+│       └── trpc
+│           └── [trpc]
+├── hooks
+├── lib
+├── server
+│   ├── api
+│   │   └── routers
+│   └── db
+├── styles
+└── trpc
+```
+
+### Folder Descriptions
+
+- **app/**: Contains the main application logic. It includes subdirectories such as:
+  - **_components/**: Houses shared UI components.
+    - **ui/**: shadcn components  | STATIC. DO NOT EDIT FILES IN THIS DIRECTORY
+  - **api/**: Contains API endpoint definitions.
+    - **trpc/**: Holds tRPC related API logic with dynamic routing support.
+- **hooks/**: Contains custom React hooks to encapsulate reusable logic.
+- **lib/**: Stores utility functions and helper modules used across the application.
+- **server/**: Contains the server-side code and backend logic. It includes:
+  - **api/**: Organizes server-side API routes.
+    - **routers/**: Contains router definitions for API endpoints.
+  - **db/**: Manages database connections and ORM configurations.
+- **styles/**: Contains styling information such as CSS or style modules.
+- **trpc/**: Contains global tRPC configurations and utilities.

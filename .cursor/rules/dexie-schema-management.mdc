@@ -1,0 +1,185 @@
+---
+description: indexdb management with dexie
+globs: *.ts, *.tsx
+---
+ # Dexie Schema Management
+
+## Checking Current Schema
+
+To check the current database schema:
+
+```javascript
+// In browser console
+const db = await import('/src/db/db.js'); 
+console.log(db.default.verno); // Current version number
+console.log(db.default.tables.map(t => ({ 
+  name: t.name, 
+  schema: t.schema.indexes.join(', ')
+}))); // Tables and their schemas
+```
+
+## Updating Schema
+
+When modifying the database schema, follow these steps:
+
+1. **ALWAYS increment the version number** when changing the schema
+2. Define all tables in the new version, not just changed ones
+3. Use upgrade functions to migrate data when needed
+
+```javascript
+// src/db/db.js
+import Dexie from 'dexie';
+
+const db = new Dexie('chatLogCleanerDB');
+
+// Initial schema (v1)
+db.version(1).stores({
+  metadata: 'id',
+  content: 'id',
+  rounds: 'id',
+  chunks: 'id'
+});
+
+// Updated schema (v2) - adding new table and modifying existing
+db.version(2).stores({
+  metadata: 'id',
+  content: 'id',
+  rounds: 'id, createDate', // Added new index
+  chunks: 'id',
+  settings: 'id' // New table
+}).upgrade(tx => {
+  // Migration logic for existing data
+  return tx.rounds.toCollection().modify(round => {
+    round.createDate = round.createDate || new Date().toISOString();
+  });
+});
+
+export default db;
+```
+
+## When to Update Schema
+
+Update the schema when:
+
+1. **Adding a new table** to store new entity types
+2. **Adding an index** to improve query performance
+3. **Removing a table** that's no longer needed
+4. **Renaming fields** that need to be searchable
+5. **Changing primary key** structure
+
+Do NOT update schema for:
+- Adding/removing non-indexed fields (Dexie is schemaless for field structure)
+- Changing data formats without affecting indexing
+
+## Schema Migration Best Practices
+
+### Handling Breaking Changes
+
+For major changes that might break existing data:
+
+```javascript
+db.version(3).stores({
+  // Schema definition
+}).upgrade(async tx => {
+  // Backup existing data before migration
+  const oldRounds = await tx.rounds.toArray();
+  
+  // Perform complex migration logic
+  
+  // Log migration success/failure
+  console.log(`Migrated ${oldRounds.length} rounds to new schema`);
+});
+```
+
+### Conditional Schema Upgrades
+
+```javascript
+// Check conditions before performing expensive migrations
+db.version(4).stores({
+  // Schema definition
+}).upgrade(async tx => {
+  const metadata = await tx.metadata.get('schemaInfo');
+  
+  if (!metadata || !metadata.upgradePerformed) {
+    // Perform migration
+    
+    // Mark as upgraded
+    await tx.metadata.put({
+      id: 'schemaInfo',
+      upgradePerformed: true,
+      upgradeDate: new Date().toISOString()
+    });
+  }
+});
+```
+
+## Testing Schema Changes
+
+Before deploying schema changes:
+
+1. Test in private browser window to ensure migration works
+2. Create test cases for both empty DB and existing data
+3. Verify both schema and data integrity after migration
+
+## Emergency Recovery
+
+In case of schema migration failures:
+
+```javascript
+// Add this to your database initialization
+db.on('versionchange', event => {
+  if (event.newVersion < event.oldVersion) {
+    // Handle downgrade scenario
+    console.warn('Database downgrade detected');
+  }
+});
+
+// Manual recovery function
+export async function attemptSchemaRecovery() {
+  try {
+    // Delete database and reload
+    await Dexie.delete('chatLogCleanerDB');
+    window.location.reload();
+    return true;
+  } catch (error) {
+    console.error('Recovery failed:', error);
+    return false;
+  }
+}
+```
+
+## Common Issues and Solutions
+
+### Blocked Version Change
+
+If schema upgrade is blocked (multiple tabs open):
+```javascript
+db.on('blocked', () => {
+  alert('Database upgrade blocked. Please close other tabs of this application');
+});
+```
+
+### Schema Verification
+
+Add a function to verify schema health:
+```javascript
+export async function verifySchemaHealth() {
+  try {
+    // Test basic operations on all tables
+    const tables = db.tables.map(t => t.name);
+    const results = await Promise.all(
+      tables.map(async table => {
+        try {
+          await db.table(table).count();
+          return { table, status: 'ok' };
+        } catch (error) {
+          return { table, status: 'error', error };
+        }
+      })
+    );
+    return results;
+  } catch (error) {
+    return [{ status: 'critical', error }];
+  }
+}
+```

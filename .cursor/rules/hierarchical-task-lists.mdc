@@ -1,0 +1,43 @@
+---
+description: when working on a task
+globs: *.*
+alwaysApply: false
+---
+<rule>
+Name: hierarchical_task_list_management
+
+Description: This rule outlines how to use the server-memory mcp server and sequential thinking mcp tool to effectively manage hierarchical task lists. It covers creating main tasks and sub-task lists, building ordered steps, visualizing hierarchies, marking tasks complete, and adding observations.
+
+Instructions:
+
+1. Creating Hierarchical Task Lists:
+   - Use create_entities to register main tasks as primary nodes in the project graph.
+   - When a task requires multiple steps or distinct subtasks, create sub-task lists as child nodes linked to the parent task.
+   - Ensure each task and sub-task is given a unique identifier reflecting its role in the hierarchy.
+
+2. Utilizing the Sequential Thinking Tool:
+   - Apply the sequential thinking mcp tool to decompose complex tasks into well-ordered sequential steps.
+   - Treat each sequential step as a sub-node to maintain the logical flow of the task execution.
+   - Record ordering metadata (e.g., step numbers) to preserve the intended sequence.
+
+3. Visual Representation of the Hierarchical Structure:
+   - Use create_relations to establish clear parent-child links between tasks and sub-tasks.
+   - Label nodes with descriptive titles and sequence indicators to facilitate visual mapping.
+   - Optionally integrate with visualization tools that interpret the project graph to render a tree or diagram.
+
+4. Marking Tasks Complete:
+   - Define clear criteria for task completion within the observations.
+   - Use add_observations to mark individual tasks and sub-tasks as complete, including any relevant completion metadata.
+   - Maintain synchronization between parent tasks and their subtasks regarding completion status.
+
+5. Adding Observations for Tasks:
+   - Record detailed observations for each task or sub-task to capture progress, dependencies, blockers, and outcomes.
+   - Use add_observations to store reasons for task status changes and completion notes.
+   - Regularly update or delete observations using delete_observations as the task evolves.
+
+Best Practices:
+- Keep task hierarchies granular to clearly differentiate between overarching tasks and their subtasks.
+- Regularly review the task graph with read_graph and search_nodes to ensure the structure reflects current project requirements.
+- Integrate these steps into your workflow to maintain an accurate, up-to-date visual and documented representation of tasks.
+
+</rule>

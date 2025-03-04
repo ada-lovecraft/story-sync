@@ -1,0 +1,55 @@
+---
+description: Instructions for using server-memory mcp tools to track project structure, dependencies, types, and UI requirements.
+globs: *.*
+alwaysApply: false
+---
+<rule>
+Name: server_memory_mcp_tool_usage
+
+Description: This rule outlines how to utilize the server-memory mcp tools to build and maintain a comprehensive project graph. Each tool is designed to manage entities, their relationships, and observations that capture key aspects of the project structure.
+
+Tools and Their Usage:
+
+1. create_entities: 
+   - Purpose: Registers new components, modules, or nodes (e.g., UI components, data models) in the project's graph.
+   - Usage: Call this tool when introducing a new piece of the project structure to ensure it is tracked.
+
+2. create_relations: 
+   - Purpose: Establishes connections between entities such as component hierarchies, dependency links, and data flows.
+   - Usage: Use this to define how different parts of the system interact or depend on one another.
+
+3. add_observations: 
+   - Purpose: Records metadata, performance metrics, design notes, or any additional insights regarding an entity or its relation.
+   - Usage: Update the graph with observations to enrich the contextual understanding of nodes.
+
+4. delete_entities: 
+   - Purpose: Removes entities that are deprecated, refactored, or no longer part of the project.
+   - Usage: Ensure the graph remains up-to-date by deleting obsolete nodes.
+
+5. delete_observations: 
+   - Purpose: Cleans up observations that are outdated or irrelevant given changes in the project.
+   - Usage: Use to maintain clarity in observational data over time.
+
+6. delete_relations: 
+   - Purpose: Eliminates connections between nodes that are no longer valid or have been restructured.
+   - Usage: Remove relationships to accurately represent the current project architecture.
+
+7. read_graph: 
+   - Purpose: Queries and retrieves the current state of the project graph, including all entities and relationships.
+   - Usage: Use for analysis and reviews to get a snapshot of the project structure.
+
+8. search_nodes: 
+   - Purpose: Searches for specific nodes in the graph based on criteria such as type, dependency, or component role.
+   - Usage: Utilize this tool to locate elements quickly when debugging or analyzing requirements.
+
+9. open_nodes: 
+   - Purpose: Provides a detailed view or direct access to a node's context, such as source code, documentation, or metadata.
+   - Usage: Leverage this tool for an in-depth exploration of a component or dependency.
+
+Best Practices for Maximizing Project Understanding:
+- Consistently update the project graph as new entities are created or old ones removed.
+- Integrate these tools into your CI/CD pipelines and code review processes to maintain a reliable and current representation of the project's architecture.
+- Document each entity and relationship with clear, descriptive metadata to improve searchability and clarity.
+- Regularly review the graph using read_graph and search_nodes to ensure that the project structure aligns with current requirements and dependencies.
+
+</rule>

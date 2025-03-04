@@ -1,0 +1,50 @@
+---
+description: custom logging solution
+globs: *.tsx, *.ts
+alwaysApply: false
+---
+
+# Logging Rules
+
+- never use `console.log`, `console.warn`, `console.error` or `console.info` directly
+- import `createLogger` from `@/lib/logger` and create a logger instance with a kebabe-cased name of the current module
+- destructure the return of `createLogger` i.e.: `const {log} = createLogger('some-module')`
+- call the destructured methods directly just as you would with console.log, with any number of arguments of any type
+- always provide a message as the first argument
+- never provide the message as part of the data payload.
+- if providing data to a logging method, always wrap data in an object, for easier reading on the browser console
+- Use different logging methods to allow for filtering:
+  - log - trace level information. useful for debugging and searching. Most internal logging will use this method
+  - info - useful information that indicates significant state changes. For Instance, routing.
+  - warn - indicate a non-fatal issue or error. provides a stack trace
+  - err - indicate a fatal error, provides a stack trace and browser notification.
+
+
+## Example Logging Usages
+
+**Instantiate a logger for a module:**
+
+```typescript
+const {log, info, warn, err} = createLogger('logging-example')
+
+
+**Log a simple message:**
+
+```typescript
+log('hello, world!')
+```
+
+**Log a message and a simple data payload:**
+
+```typescript
+log('selected fruits', { selectedFruits })
+```
+
+**Log a message and a collection of data points:**
+
+```typescript
+log('selected fruits', { availableFruits, selectedFruits, allFruits})
+```
+
+**Log an Info message** 
+(higher visibility in console, and can be filtered on)

@@ -1,0 +1,74 @@
+---
+description: Single Responsibility React Components with shadcn and Tailwind CSS
+globs: src/**/*.tsx, src/**/*.jsx, src/**/*.ts, src/**/*.js, src/app/_components/**/*
+alwaysApply: false
+---
+<rule>
+name: basic-ui-components
+description: |
+  Guidelines for creating single responsibility React components that leverage shadcn and Tailwind CSS.
+  These rules cover component structure, props design, styling practices, and accessibility considerations.
+
+rules:
+  - Component Structure:
+    - Each component should have a single, well-defined responsibility
+    - Use named exports for all components
+    - Place each component in its own file unless they are tightly coupled
+    - Group related components in feature-specific directories
+    - Follow a consistent naming convention (PascalCase for components)
+
+  - Props Design:
+    - Use TypeScript interfaces to define component props
+    - Leverage React.ComponentPropsWithoutRef<> for extending HTML element props
+    - Provide sensible default props where appropriate
+    - Use destructuring to access props in the component body
+    - Document complex props with JSDoc comments
+
+  - shadcn Integration:
+    - Use shadcn components as building blocks for custom components
+    - Extend shadcn components using the provided APIs rather than duplicating functionality
+    - Follow shadcn's component composition patterns
+    - Place shadcn component variants in a dedicated variants.ts file
+    - Use shadcn's form components with react-hook-form for form handling
+
+  - Tailwind CSS Usage:
+    - Use Tailwind's utility classes directly in components
+    - Create custom utility classes in the Tailwind config for repeated patterns
+    - Use the clsx or cn utility for conditional class application
+    - Follow mobile-first responsive design principles
+    - Maintain consistent spacing using Tailwind's spacing scale
+
+  - Component Organization:
+    - Separate UI components from container/logic components
+    - Use a consistent directory structure:
+      - src/app/_components/ui/ for reusable UI components
+      - src/app/_components/[feature]/ for feature-specific components
+      - src/lib/utils.ts for utility functions
+      - src/styles/ for global styles and Tailwind extensions
+
+  - Accessibility:
+    - Ensure all components meet WCAG 2.1 AA standards
+    - Use semantic HTML elements appropriately
+    - Include proper aria attributes when necessary
+    - Ensure keyboard navigation works for all interactive elements
+    - Test components with screen readers
+
+  - Performance Considerations:
+    - Memoize expensive components with React.memo
+    - Use useCallback for functions passed as props
+    - Implement virtualization for long lists
+    - Lazy load components not needed for initial render
+    - Avoid unnecessary re-renders by managing state properly
+
+  - Testing:
+    - Write unit tests for each component
+    - Test component rendering, interactions, and edge cases
+    - Use React Testing Library for component testing
+    - Create snapshot tests for UI components
+    - Test accessibility with jest-axe
+
+metadata:
+  version: 1.0
+  priority: high
+  created_by: cursor
+</rule>

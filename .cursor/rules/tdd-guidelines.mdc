@@ -1,0 +1,32 @@
+---
+description: Proper TDD Guidelines using bun test
+globs: src/**/*.tsx, src/**/*.ts, *.tsx, *.ts
+alwaysApply: false
+---
+<rule>
+name: tdd-guidelines
+description: |
+  Guidelines to enforce proper TDD using bun test as the test runner.
+  These rules cover testing React components and hooks, and stress writing high quality tests and assertions.
+
+rules:
+  - Always use 'bun test' as the test runner for consistency and speed.
+  - Adopt a TDD approach: write tests before the implementation.
+  - For React component tests:
+      - Use render and snapshot testing to capture UI consistency.
+      - Test component behavior and interactions using testing libraries like React Testing Library.
+  - For hooks tests:
+      - Test hook behavior, including state changes and side-effects.
+      - Use utilities such as 'react-hooks-testing-library' for isolation.
+  - Write high quality tests:
+      - Ensure assertions are clear, specific, and expressive.
+      - Use descriptive test case names and structure tests for readability.
+      - Keep tests isolated, fast, and reliable.
+  - Follow consistent naming conventions for test files (e.g., *.spec.ts, *.test.tsx).
+  - Maintain test coverage and update tests as code evolves.
+
+metadata:
+  version: 1.0
+  priority: high
+  created_by: cursor
+</rule>
